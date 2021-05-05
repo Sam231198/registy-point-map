@@ -1,0 +1,1 @@
+# registy_point_map
