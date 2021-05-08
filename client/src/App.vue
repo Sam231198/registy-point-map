@@ -5,16 +5,22 @@
         <Dialog :dialog="dialog" v-on:Close="onDialog" />
         <LMap :zoom="zoom" :center="center" @click="addMarker">
           <LTileLayer :url="url" />
-          <l-marker
+          <LFeatureGroup ref="features">
+            <LPopup>
+              <span> Yay I was opened by {{ caller }}</span></LPopup
+            >
+          </LFeatureGroup>
+          <LMarker
             v-for="(item, index) in markers"
             :key="index"
             :lat-lng="item"
+            @mouseover="openPopUp(item, 'marker')"
           >
-            <l-icon
+            <LIcon
               iconUrl="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
               shadowUrl="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png"
             />
-          </l-marker>
+          </LMarker>
 
           <ToolBar />
         </LMap>
@@ -26,7 +32,7 @@
 <script>
 import Dialog from "./components/Dialog";
 import L from "leaflet";
-import { LMap, LTileLayer, LMarker, LIcon } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LIcon, LFeatureGroup, LPopup } from "vue2-leaflet";
 import ToolBar from "./components/ToolBar";
 
 // corrige erro de link do icone default
@@ -49,6 +55,8 @@ export default {
     LMarker,
     LIcon,
     ToolBar,
+    LFeatureGroup,
+    LPopup
   },
 
   data: () => ({
@@ -62,6 +70,7 @@ export default {
       [13.1348904, 77.5643231],
       [13.1367826, 77.5711133],
     ],
+    caller: null,
   }),
   methods: {
     removeMarker(index) {
@@ -69,11 +78,15 @@ export default {
     },
     addMarker(event) {
       this.markers.push(event.latlng);
-      this.onDialog()
+      this.onDialog();
     },
-    onDialog(){
+    onDialog() {
       this.dialog = !this.dialog;
-    }
+    },
+    openPopUp(latLng, caller) {
+      this.caller = caller;
+      this.$refs.features.mapObject.openPopup(latLng);
+    },
   },
 };
 </script>

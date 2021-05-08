@@ -1,38 +1,39 @@
 <template>
   <v-card v-if="dialog" floating width="500" class="mx-auto">
-    <v-card-title class="headline grey lighten-2">
-      Privacy Policy
-    </v-card-title>
+    <v-card-title class="headline"> Cadastrar um novo local </v-card-title>
 
     <v-form v-model="valid">
       <v-container>
         <v-row>
-          <v-col cols="12" md="4">
+          <v-col cols="12">
             <v-text-field
-              v-model="firstname"
-              :rules="nameRules"
+              v-model="name"
               :counter="10"
-              label="First name"
+              label="Nome do local"
               required
+              outlined
             ></v-text-field>
           </v-col>
+        </v-row>
 
-          <v-col cols="12" md="4">
-            <v-text-field
-              v-model="lastname"
-              :rules="nameRules"
-              :counter="10"
-              label="Last name"
-              required
-            ></v-text-field>
+        <v-row>
+          <v-col cols="12">
+            <v-select
+              v-model="category"
+              :items="categories"
+              label="Categoria"
+              outlined
+            ></v-select>
           </v-col>
+        </v-row>
 
-          <v-col cols="12" md="4">
+        <v-row>
+          <v-col cols="12">
             <v-text-field
               v-model="address"
-              :rules="emailRules"
-              label="E-mail"
+              label="Endereço"
               required
+              outlined
             ></v-text-field>
           </v-col>
         </v-row>
@@ -43,20 +44,36 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" text @click="$emit('Close')"> I accept </v-btn>
+      <v-btn color="red" text @click="$emit('Close')"> CancelaR </v-btn>
+      <v-btn color="green" text @click="$emit('Close')"> Cadastrar </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 <script>
 export default {
-  props: ['dialog']
+  props: ["dialog"],
+  data: function () {
+    return {
+      name: "",
+      category: "",
+      address: "",
+      categories: [
+        "Alimentação",
+        "Tecnologia",
+        "Saúde",
+        "Serviços",
+        "Distribuição",
+        "Outros",
+      ],
+    };
+  },
 };
 </script>
 <style scoped>
 .v-card {
   position: fixed;
   left: 30%;
-  top: 25%;
-  z-index: 1000;
+  top: 15%;
+  z-index: 10000;
 }
 </style>
