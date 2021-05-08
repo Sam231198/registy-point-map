@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="dialog" floating width="500" class="mx-auto">
+  <v-card v-if="props.dialog" floating width="500" class="mx-auto">
     <v-card-title class="headline"> Cadastrar um novo local </v-card-title>
 
     <v-form v-model="valid">
@@ -44,19 +44,19 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="red" text @click="$emit('Close')"> CancelaR </v-btn>
-      <v-btn color="green" text @click="$emit('Close')"> Cadastrar </v-btn>
+      <v-btn color="red" text @click="$emit('Close')"> Fechar </v-btn>
+      <v-btn color="green" text @click="cadastro"> Cadastrar </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 <script>
 export default {
-  props: ["dialog"],
+  props: ["props"],
   data: function () {
     return {
-      name: "",
-      category: "",
-      address: "",
+      name: null,
+      category: null,
+      address: null,
       categories: [
         "Alimentação",
         "Tecnologia",
@@ -66,6 +66,34 @@ export default {
         "Outros",
       ],
     };
+  },
+  methods: {
+    cadastro: function () {
+      this.axios
+        .post("http://localhost:8000/locations", {
+          name: this.name,
+          address: this.address,
+          category: this.category,
+          lat: this.props.lat,
+          lng: this.props.lng,
+        })
+        .then((response) => {
+          if (response.status === 201) {
+            
+            // Zerando os dados apos serem salvos
+            this.name = null;
+            this.address = null;
+            this.category = null;
+            this.props.lat = null;
+            this.props.lng = null;
+
+            /**
+             * informa ao componente pai que foi cadastro e o component pai ira invocar a função para tirar o modal
+             */
+            this.$emit("cadastro");
+          }
+        });
+    },
   },
 };
 </script>

@@ -2,24 +2,35 @@
   <v-app>
     <v-main>
       <div id="mapDiv">
-        <Dialog :dialog="dialog" v-on:Close="onDialog" />
-        <LMap :zoom="zoom" :center="center" @click="addMarker">
+        <Dialog
+          :props="dialogDados"
+          v-on:Close="onDialog"
+          v-on:cadastro="loadingMarkers"
+        />
+        <LMap :zoom="zoom" :center="center" @click="selectPosition" :options="{zoomControl: false}">
           <LTileLayer :url="url" />
-          <LFeatureGroup ref="features">
-            <LPopup>
-              <span> Yay I was opened by {{ caller }}</span></LPopup
-            >
-          </LFeatureGroup>
+
           <LMarker
-            v-for="(item, index) in markers"
+            v-for="(item, index) in locations"
             :key="index"
-            :lat-lng="item"
-            @mouseover="openPopUp(item, 'marker')"
+            :lat-lng="[parseFloat(item.lat), parseFloat(item.lng)]"
+            @mouseover="
+              openPopUp([parseFloat(item.lat), parseFloat(item.lng)], 'marker')
+            "
           >
             <LIcon
-              iconUrl="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
+              :iconUrl="`https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${
+                colorCategory[item.category]
+              }.png`"
               shadowUrl="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png"
             />
+            <l-tooltip>
+              <b>Nome: {{ item.name }}</b>
+              <br />
+              <span>Categoria: {{ item.category }}</span>
+              <br />
+              <span>Endereço: {{ item.address }}</span>
+            </l-tooltip>
           </LMarker>
 
           <ToolBar />
@@ -32,7 +43,13 @@
 <script>
 import Dialog from "./components/Dialog";
 import L from "leaflet";
-import { LMap, LTileLayer, LMarker, LIcon, LFeatureGroup, LPopup } from "vue2-leaflet";
+import {
+  LMap,
+  LTileLayer,
+  LMarker,
+  LIcon,
+  LTooltip
+} from "vue2-leaflet";
 import ToolBar from "./components/ToolBar";
 
 // corrige erro de link do icone default
@@ -55,37 +72,51 @@ export default {
     LMarker,
     LIcon,
     ToolBar,
-    LFeatureGroup,
-    LPopup
+    LTooltip,
   },
 
   data: () => ({
-    dialog: false,
+    dialogDados: { dialog: false, lat: null, lng: null },
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    zoom: 16,
-    center: [13.1367826, 77.5711133],
-    markers: [
-      [13.1333682, 77.5651881],
-      [13.1340669, 77.56707],
-      [13.1348904, 77.5643231],
-      [13.1367826, 77.5711133],
-    ],
-    caller: null,
-  }),
-  methods: {
-    removeMarker(index) {
-      this.markers.splice(index, 1);
+    zoom: 15,
+    center: [-15.826691, -47.921822],
+    locations: null,
+    colorCategory: {
+      Alimentação: "yellow",
+      Tecnologia: "blue",
+      Saúde: "red",
+      Serviços: "orange",
+      Distribuição: "green",
+      Outros: "grey",
     },
-    addMarker(event) {
-      this.markers.push(event.latlng);
+  }),
+  created: function () {
+    this.loadingMarkers();
+  },
+  methods: {
+    selectPosition(event) {
+      // verifica se o model esta false, se tiver irar enviar o dados de latitude para o modal
+      if (!this.dialogDados.dialog)
+        this.dialogDados = {
+          dialog: false,
+          lat: event.latlng.lat,
+          lng: event.latlng.lng,
+        };
+
+      // ira abrir o modal 
       this.onDialog();
     },
     onDialog() {
-      this.dialog = !this.dialog;
+      this.dialogDados.dialog = !this.dialogDados.dialog;
     },
-    openPopUp(latLng, caller) {
-      this.caller = caller;
-      this.$refs.features.mapObject.openPopup(latLng);
+    loadingMarkers() {
+      // carregar o os markers no mapa 
+      this.axios.get("http://localhost:8000/locations").then((response) => {
+        this.locations = response.data;
+      });
+
+      // se o modal tiver ativo, apos salvar um novo marker o model irá se fechar 
+      if (this.dialogDados.dialog) this.onDialog();
     },
   },
 };
