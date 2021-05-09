@@ -8,7 +8,6 @@
           <v-col cols="12">
             <v-text-field
               v-model="name"
-              :counter="10"
               label="Nome do local"
               required
               outlined
@@ -79,7 +78,7 @@ export default {
         })
         .then((response) => {
           if (response.status === 201) {
-            
+
             // Zerando os dados apos serem salvos
             this.name = null;
             this.address = null;
