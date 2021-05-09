@@ -46,3 +46,7 @@ npm run serve
 ```
 
 A aplicação vai está rodando em `localhost:8080`.
+
+## Video demonstrativo
+
+![Watch the video](https://youtu.be/XaNIttsvxGA)

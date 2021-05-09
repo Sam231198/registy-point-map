@@ -13,17 +13,13 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
 $router->group(['prefix' => 'locations'], function () use ($router) {
     $router->get('/', [
         'as' => 'index',
         'uses' => 'LocationsController@index'
     ]);
     $router->post('/', [
-        'as' => 'index',
+        'as' => 'store',
         'uses' => 'LocationsController@store'
     ]);
 });
