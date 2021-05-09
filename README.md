@@ -49,4 +49,4 @@ A aplicação vai está rodando em `localhost:8080`.
 
 ## Video demonstrativo
 
-![Watch the video](https://youtu.be/XaNIttsvxGA)
+[![Watch the video](https://i9.ytimg.com/vi_webp/XaNIttsvxGA/mqdefault.webp?time=1620522600000&sqp=COjs3IQG&rs=AOn4CLBQeUTtCo35LOMxOUxzkOk5X5bEVw)](https://youtu.be/XaNIttsvxGA)
