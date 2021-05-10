@@ -3,16 +3,16 @@ Micro aplicação web que possibilita marca pontos de interesse no mapa.
 
 ## Tecnologia
 ### Front-End
-- [Node]()
-- [VueCLI]() 
-- [Vuetify]() 
-- [Axios]() 
-- [Leaflet]()
+- [NodeJS](https://nodejs.org/en/)
+- [VueCLI](https://cli.vuejs.org/) 
+- [Vuetify](https://vuetifyjs.com/en/) 
+- [Axios Vue](https://www.npmjs.com/package/vue-axios) 
+- [Leaflet](https://leafletjs.com/)
 
 ### Back-End
-- [PHP]()
-- [Lumen]()
-- [PostgreSQL]()
+- [PHP](https://www.php.net/manual/pt_BR/intro-whatis.php)
+- [Lumen](https://lumen.laravel.com/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 ## Inicar o projeto
 ### back-End
